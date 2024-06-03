@@ -47,70 +47,86 @@ class _TodoPageState extends State<TodoPage> {
                 'Plantist',
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
               )),
+          const SizedBox(
+              height: 10), // Add some space between title and search bar
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              onChanged: (value) {
+                // Call filtering function when text changes
+                todoController.filterTodos(value);
+              },
+              decoration: InputDecoration(
+                labelText: 'Search',
+                hintText: 'Search in titles',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ),
           SingleChildScrollView(
             child: Container(
-              height: MediaQuery.of(context).size.height - 400,
-              child: GetX<TodoController>(
-                init: TodoController(),
-                builder: (controller) {
-                  return ListView.builder(
-                    itemCount: controller.todoList.length,
-                    itemBuilder: (context, index) {
-                      toDoModel todo = controller.todoList[index];
-                      return Dismissible(
-                        key: Key(todo.todoId), // Unique key for each item
-                        background: Container(
-                          color: Colors.red,
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 20.0),
-                          child: const Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                          ),
+              height: MediaQuery.of(context).size.height - 450,
+              child: Obx(() {
+                return ListView.builder(
+                  itemCount: todoController.filteredTodos.length,
+                  itemBuilder: (context, index) {
+                    toDoModel todo = todoController.filteredTodos[index];
+                    return Dismissible(
+                      key: Key(todo.todoId), // Unique key for each item
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.white,
                         ),
-                        onDismissed: (direction) {
-                          todoController.deleteTodo(todo.todoId);
-                        },
-                        child: Card(
-                          elevation: 3,
-                          margin: const EdgeInsets.symmetric(
+                      ),
+                      onDismissed: (direction) {
+                        todoController.deleteTodo(todo.todoId);
+                      },
+                      child: Card(
+                        elevation: 3,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            leading: Checkbox(
-                              value: todo.isDone,
-                              onChanged: (bool? value) {
-                                // Update the isDone status when checkbox is changed
-                                todoController.updateTodoStatus(
-                                    todo.todoId, value ?? false);
-                              },
-                            ),
-                            title: Text(
-                              todo.title,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                            subtitle: Text(
-                              todo.note,
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                            onTap: () {
-                              // Implement update logic here
-                              // _showUpdateReminderModal(context, todo);
+                          leading: Checkbox(
+                            value: todo.isDone,
+                            onChanged: (bool? value) {
+                              // Update the isDone status when checkbox is changed
+                              todoController.updateTodoStatus(
+                                  todo.todoId, value ?? false);
                             },
                           ),
+                          title: Text(
+                            todo.title,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          subtitle: Text(
+                            todo.note,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          onTap: () {
+                            // Implement update logic here
+                            // _showUpdateReminderModal(context, todo);
+                          },
                         ),
-                      );
-                    },
-                  );
-                },
-              ),
+                      ),
+                    );
+                  },
+                );
+              }),
             ),
           ),
           const SizedBox(height: 30),
@@ -129,7 +145,7 @@ class _TodoPageState extends State<TodoPage> {
               child: Container(
                 alignment: Alignment.bottomCenter,
                 width: 300,
-                height: 60, // Make button take full width
+                height: 60,
                 padding: const EdgeInsets.all(10),
                 margin: const EdgeInsets.all(10),
                 child: const Row(
