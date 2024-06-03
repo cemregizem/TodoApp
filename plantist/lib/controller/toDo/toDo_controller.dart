@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:plantist/model/toDo_model.dart';
@@ -50,8 +51,16 @@ class TodoController extends GetxController {
         'todoId': todoId,
         'note': note,
       });
+    }else{
+          ScaffoldMessenger.of(Get.context!).showSnackBar(
+        SnackBar(
+          content: Text('Title and note cannot be empty!'),
+        ),);
+      
     }
-  }
+    }
+
+  
 
   Future<void> deleteTodo(String todoId) async {
     String uid = FirebaseAuth.instance.currentUser!.uid;

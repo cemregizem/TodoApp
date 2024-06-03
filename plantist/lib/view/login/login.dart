@@ -11,7 +11,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,8 +19,8 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
-              Icons.account_circle,
-              size: 100,
+              Icons.document_scanner,
+              size: 200,
             ),
             const SizedBox(height: 20),
             const Text(
@@ -48,12 +47,14 @@ class _LoginPageState extends State<LoginPage> {
             ElevatedButton.icon(
               onPressed: () {
                 Get.to(signInPage());
-             
               },
-              icon: const Icon(Icons.email,size:25,color: Colors.black,),
+              icon: const Icon(
+                Icons.email,
+                size: 25,
+                color: Colors.black,
+              ),
               label: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                // Adjust vertical padding to increase or decrease button height
                 child: const Text('Sign in with email',
                     style: TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold)),
@@ -65,8 +66,14 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            const SizedBox(height:30),
-            TextButton(onPressed :() => Get.to(SignUpPage()), child: const Text('Create Account',style: TextStyle(color:Colors.black),textAlign: TextAlign.center,))
+            const SizedBox(height: 30),
+            TextButton(
+                onPressed: () => Get.to(SignUpPage()),
+                child: const Text(
+                  'Create Account',
+                  style: TextStyle(color: Colors.black),
+                  textAlign: TextAlign.center,
+                ))
           ],
         ),
       ),

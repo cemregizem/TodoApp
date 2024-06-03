@@ -10,7 +10,6 @@ class TodoPage extends StatefulWidget {
 
   final String email;
   final String userId;
-  
 
   @override
   State<TodoPage> createState() => _TodoPageState();
@@ -19,7 +18,7 @@ class TodoPage extends StatefulWidget {
 class _TodoPageState extends State<TodoPage> {
   TextEditingController noteController = TextEditingController();
   TextEditingController titleController = TextEditingController();
-  // late TodoController todoController;
+
   late TodoController todoController = Get.put(TodoController());
 
   @override
@@ -38,71 +37,80 @@ class _TodoPageState extends State<TodoPage> {
             AuthController.instance.logOut();
           },
         ),
-        title: Text(widget.email),
       ),
       body: Column(
         children: [
-          Expanded(
-            child: GetX<TodoController>(
-              init: TodoController(),
-              builder: (controller) {
-                return ListView.builder(
-                  itemCount: controller.todoList.length,
-                  itemBuilder: (context, index) {
-                    toDoModel todo = controller.todoList[index];
-                    return Dismissible(
-                      key: Key(todo.todoId), // Unique key for each item
-                      background: Container(
-                        color: Colors.red,
-                        alignment: Alignment.centerRight,
-                        padding: EdgeInsets.only(right: 20.0),
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
+          Container(
+              alignment: Alignment.topLeft,
+              padding: const EdgeInsets.only(left: 16),
+              child: const Text(
+                'Plantist',
+                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              )),
+          SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height - 400,
+              child: GetX<TodoController>(
+                init: TodoController(),
+                builder: (controller) {
+                  return ListView.builder(
+                    itemCount: controller.todoList.length,
+                    itemBuilder: (context, index) {
+                      toDoModel todo = controller.todoList[index];
+                      return Dismissible(
+                        key: Key(todo.todoId), // Unique key for each item
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      onDismissed: (direction) {
-                       
-                       todoController.deleteTodo(todo.todoId);
-                      },
-                      child: Card(
-                        elevation: 3,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
+                        onDismissed: (direction) {
+                          todoController.deleteTodo(todo.todoId);
+                        },
+                        child: Card(
+                          elevation: 3,
+                          margin: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 8),
-                           leading: Checkbox(
-            value: todo.isDone,
-            onChanged: (bool? value) {
-              // Update the isDone status when checkbox is changed
-              todoController.updateTodoStatus(todo.todoId, value ?? false);
-            },
-          ),
-                          title: Text(
-                            todo.title,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            leading: Checkbox(
+                              value: todo.isDone,
+                              onChanged: (bool? value) {
+                                // Update the isDone status when checkbox is changed
+                                todoController.updateTodoStatus(
+                                    todo.todoId, value ?? false);
+                              },
                             ),
+                            title: Text(
+                              todo.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            subtitle: Text(
+                              todo.note,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            onTap: () {
+                              // Implement update logic here
+                              // _showUpdateReminderModal(context, todo);
+                            },
                           ),
-                          subtitle: Text(
-                            todo.note,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          onTap: () {
-                            // Implement update logic here
-                            // _showUpdateReminderModal(context, todo);
-                          },
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ),
           const SizedBox(height: 30),
@@ -152,8 +160,6 @@ class _TodoPageState extends State<TodoPage> {
 
   void _showNewReminderModal(BuildContext context) {
     TextEditingController noteController = TextEditingController();
-    DateTime selectedDate = DateTime.now();
-    TimeOfDay selectedTime = TimeOfDay.now();
 
     showModalBottomSheet(
       context: context,
@@ -217,7 +223,7 @@ class _TodoPageState extends State<TodoPage> {
               const SizedBox(height: 60),
               GestureDetector(
                 onTap: () {
-                  ModalManager.showDetailModal(context);
+                  _showDetailModal(context);
                 },
                 child: Container(
                   width: double.infinity, // Take full width
@@ -275,9 +281,23 @@ class _TodoPageState extends State<TodoPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      TextButton(
+                        onPressed: () {
+                          // Handle cancel button action
+                          Navigator.pop(context); // Close the bottom sheet
+                        },
+                        child: const Text(
+                          'Back',
+                          style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                      ),
                       TextButton(
                         onPressed: () {},
                         child: const Text(
