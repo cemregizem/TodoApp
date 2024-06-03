@@ -7,15 +7,10 @@ import 'package:firebase_database/firebase_database.dart';
 
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
-//would be able to access to our authcontroller
-//and its related properties and fields from other pages
-//whenever we want to access in future AuthController.instance...
 
   late Rx<User?> _user;
-//we use late because sometimes lifecycle and visibility of an object do not align.
-//we use the late keyword to declare variables that will be initialized later.
+
   FirebaseAuth auth = FirebaseAuth.instance;
-//using this we ll be able to access a lot of properties from firebase
 
   DatabaseReference _userRef =
       FirebaseDatabase.instance.reference().child('users');
@@ -24,23 +19,24 @@ class AuthController extends GetxController {
   void onReady() {
     super.onReady();
 
-    _user = Rx<User?>(auth.currentUser);
-    //casting it to be Rx user
-    _user.bindStream((auth.userChanges())); //bind our user to stream
-    //whenever things changes with the user like login or log out vs this instance would be notified
+    _user = Rx<User?>(auth.currentUser); //casting it to be Rx user
 
-    //listener and callback function
-    ever(_user, _initialScreen); //listening any changes all the time
+    _user.bindStream((auth.userChanges())); //bind our user to stream
+    //whenever things changes this instance would be notified
+
+    ever(_user,
+        _initialScreen); //listener and callback function listening any changes all the time
   }
 
-  //? for if it is null
   _initialScreen(User? user) {
     if (user == null) {
       //user didnt login
-      print("Login Page");
       Get.offAll(() => const LoginPage());
     } else {
-      Get.offAll(() => TodoPage(email: user.email!,userId: user.uid,));
+      Get.offAll(() => TodoPage(
+            email: user.email!,
+            userId: user.uid,
+          ));
     }
   }
 
@@ -52,10 +48,9 @@ class AuthController extends GetxController {
       String userId = auth.currentUser!.uid;
 
       await _userRef.child(userId).set({
-        'uid':userId,
+        'uid': userId,
         'email': email,
       });
-
     } catch (e) {
       Get.snackbar('About User', 'User Message',
           backgroundColor: Colors.redAccent,

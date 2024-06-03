@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plantist/controller/auth/auth_controller.dart';
 
-
 class signInPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -15,7 +14,7 @@ class signInPage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // Go back to the previous screen
+            Navigator.pop(context);
           },
         ),
       ),
@@ -64,7 +63,8 @@ class signInPage extends StatelessWidget {
               alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () {
-                 AuthController.instance.login(emailController.text.trim(),passwordController.text.trim());
+                  AuthController.instance.login(emailController.text.trim(),
+                      passwordController.text.trim());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey[500],
@@ -74,9 +74,8 @@ class signInPage extends StatelessWidget {
                 ),
                 child: Container(
                   alignment: Alignment.center,
-                  width: 200, // Make button take full width
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 16), // Adjust vertical padding
+                  width: 200,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   child: const Text(
                     'Sign-in',
                     textAlign: TextAlign.center,
@@ -84,13 +83,11 @@ class signInPage extends StatelessWidget {
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      // Increase font size if needed
                     ),
                   ),
                 ),
               ),
             ),
-  
           ],
         ),
       ),
