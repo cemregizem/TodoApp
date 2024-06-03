@@ -1,14 +1,16 @@
 # Plantist
 Uygulamayı yaparken cloud_firestore u eklediğimde 45 dakikaları geçen build süresi olmasından dolayı firebase realtime database kullanmak durumunda kaldım.
-Uygulamada;
-login,
-sign up,
-logout,
-new reminderla birlikte title,note ekleme
-,to-doların listelenmesi,
-yapılan todonun işaretlenmesi,
-todoların silinmesi,
-todo listesinde başlığa göre arama yapılması özellikleri çalışıyor.
+Uygulamada; <br>
+login,<br>
+sign up,<br>
+logout,<br>
+new reminderla birlikte title,note ekleme<br>
+,to-doların listelenmesi,<br>
+yapılan todonun işaretlenmesi,<br>
+todoların silinmesi,<br>
+todo listesinde başlığa göre arama yapılması özellikleri çalışıyor.<br>
+Not: Yalnızca Ios için test edildi.
+
 <img width="476" alt="Screenshot 2024-06-03 at 07 30 40" src="https://github.com/cemregizem/Plantist/assets/42242525/82595b90-2d61-474a-85cb-5d02469196d8">
 
 
