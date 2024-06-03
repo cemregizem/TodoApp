@@ -3,18 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:plantist/view/ToDo/toDo.dart';
 import 'package:plantist/view/login/login.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class AuthController extends GetxController {
- static AuthController instance = Get.find();
+  static AuthController instance = Get.find();
 //would be able to access to our authcontroller
 //and its related properties and fields from other pages
 //whenever we want to access in future AuthController.instance...
 
-late Rx<User?> _user;
+  late Rx<User?> _user;
 //we use late because sometimes lifecycle and visibility of an object do not align.
 //we use the late keyword to declare variables that will be initialized later.
-FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
 //using this we ll be able to access a lot of properties from firebase
+
+  DatabaseReference _userRef =
+      FirebaseDatabase.instance.reference().child('users');
 
   @override
   void onReady() {
@@ -31,17 +35,27 @@ FirebaseAuth auth = FirebaseAuth.instance;
 
   //? for if it is null
   _initialScreen(User? user) {
-    if (user == null) { //user didnt login
+    if (user == null) {
+      //user didnt login
       print("Login Page");
       Get.offAll(() => const LoginPage());
     } else {
-      Get.offAll(() => TodoPage(email:user.email!));
+      Get.offAll(() => TodoPage(email: user.email!,userId: user.uid,));
     }
   }
 
   void register(String email, password) async {
     try {
-     await auth.createUserWithEmailAndPassword(email: email, password: password);
+      await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      // Save user data to Firebase Realtime Database
+      String userId = auth.currentUser!.uid;
+
+      await _userRef.child(userId).set({
+        'uid':userId,
+        'email': email,
+      });
+
     } catch (e) {
       Get.snackbar('About User', 'User Message',
           backgroundColor: Colors.redAccent,
@@ -57,20 +71,21 @@ FirebaseAuth auth = FirebaseAuth.instance;
 
   void login(String email, password) async {
     try {
-     await auth.signInWithEmailAndPassword(email: email, password: password);
+      await auth.signInWithEmailAndPassword(email: email, password: password);
     } catch (e) {
       Get.snackbar('About Login', 'Login Message',
           backgroundColor: Colors.redAccent,
           snackPosition: SnackPosition.BOTTOM,
-          titleText: const Text('Login failed',
-              style: TextStyle(color: Colors.white)),
+          titleText:
+              const Text('Login failed', style: TextStyle(color: Colors.white)),
           messageText: Text(
             e.toString(),
             style: const TextStyle(color: Colors.white),
           ));
     }
   }
-  void logOut() async{
+
+  void logOut() async {
     await auth.signOut();
   }
 }

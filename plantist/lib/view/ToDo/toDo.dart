@@ -1,18 +1,33 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:plantist/controller/auth/auth_controller.dart';
-import 'package:plantist/view/ToDo/toDoModalManager.dart';
+import 'package:plantist/controller/toDo/toDo_controller.dart';
+import 'package:plantist/model/toDo_model.dart';
+import 'package:plantist/widgets/timePicker.dart';
 
 class TodoPage extends StatefulWidget {
-  const TodoPage({super.key, required this.email});
+  const TodoPage({super.key, required this.email, required this.userId});
 
   final String email;
+  final String userId;
+  
 
   @override
   State<TodoPage> createState() => _TodoPageState();
 }
 
 class _TodoPageState extends State<TodoPage> {
+  TextEditingController noteController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  // late TodoController todoController;
+  late TodoController todoController = Get.put(TodoController());
+
+  @override
+  void initState() {
+    super.initState();
+    todoController = Get.put(TodoController());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,56 +40,127 @@ class _TodoPageState extends State<TodoPage> {
         ),
         title: Text(widget.email),
       ),
-      body: Container(
-        alignment: Alignment.center,
-        child: ElevatedButton(
-          onPressed: () {
-            _showNewReminderModal(context);
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 24, 24, 24),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25),
+      body: Column(
+        children: [
+          Expanded(
+            child: GetX<TodoController>(
+              init: TodoController(),
+              builder: (controller) {
+                return ListView.builder(
+                  itemCount: controller.todoList.length,
+                  itemBuilder: (context, index) {
+                    toDoModel todo = controller.todoList[index];
+                    return Dismissible(
+                      key: Key(todo.todoId), // Unique key for each item
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.only(right: 20.0),
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onDismissed: (direction) {
+                       
+                       todoController.deleteTodo(todo.todoId);
+                      },
+                      child: Card(
+                        elevation: 3,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                           leading: Checkbox(
+            value: todo.isDone,
+            onChanged: (bool? value) {
+              // Update the isDone status when checkbox is changed
+              todoController.updateTodoStatus(todo.todoId, value ?? false);
+            },
+          ),
+                          title: Text(
+                            todo.title,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          subtitle: Text(
+                            todo.note,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          onTap: () {
+                            // Implement update logic here
+                            // _showUpdateReminderModal(context, todo);
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           ),
-          child: Container(
-            alignment: Alignment.bottomCenter,
-            width: 300,
-            height: 60, // Make button take full width
-            padding: const EdgeInsets.all(10),
-            margin: const EdgeInsets.all(10),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.add, color: Colors.white, size: 24), // "+" icon
-                SizedBox(width: 8), // Add some space between the icon and text
-                Text(
-                  'New Reminder',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    // Increase font size if needed
-                  ),
+          const SizedBox(height: 30),
+          Container(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                _showNewReminderModal(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 24, 24, 24),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
                 ),
-              ],
+              ),
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                width: 300,
+                height: 60, // Make button take full width
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add, color: Colors.white, size: 24), // "+" icon
+                    SizedBox(
+                        width: 8), // Add some space between the icon and text
+                    Text(
+                      'New Reminder',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        // Increase font size if needed
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  /*void _showNewReminderModal(BuildContext context) {
+  void _showNewReminderModal(BuildContext context) {
     TextEditingController noteController = TextEditingController();
+    DateTime selectedDate = DateTime.now();
+    TimeOfDay selectedTime = TimeOfDay.now();
 
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return Container(
           padding: const EdgeInsets.all(16),
-          height: 700, // Increase the height of the modal bottom sheet
+          height: 700,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -96,9 +182,13 @@ class _TodoPageState extends State<TodoPage> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      // Handle add button action
-                      Navigator.pop(context); // Close the bottom sheet
+                    onPressed: () async {
+                      String title = titleController.text.trim();
+                      String note = noteController.text.trim();
+                      await todoController.addTodo(title, note);
+                      titleController.clear();
+                      noteController.clear();
+                      Navigator.pop(context);
                     },
                     child: const Text(
                       'Add',
@@ -112,6 +202,13 @@ class _TodoPageState extends State<TodoPage> {
               ),
               const SizedBox(height: 20),
               TextField(
+                controller: titleController,
+                decoration: const InputDecoration(
+                  hintText: 'Title',
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextField(
                 controller: noteController,
                 decoration: const InputDecoration(
                   hintText: 'Notes',
@@ -120,7 +217,7 @@ class _TodoPageState extends State<TodoPage> {
               const SizedBox(height: 60),
               GestureDetector(
                 onTap: () {
-                  _showDetailModal(context);
+                  ModalManager.showDetailModal(context);
                 },
                 child: Container(
                   width: double.infinity, // Take full width
@@ -155,9 +252,9 @@ class _TodoPageState extends State<TodoPage> {
         );
       },
     );
-  }*/
+  }
 
- /* void _showDetailModal(BuildContext context) {
+  void _showDetailModal(BuildContext context) {
     bool showDatePicker =
         false; // Variable to control the visibility of the date picker
     bool showTimePicker =
@@ -182,23 +279,7 @@ class _TodoPageState extends State<TodoPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
-                        onPressed: () {
-                          // Handle cancel button action
-                          Navigator.pop(context); // Close the bottom sheet
-                        },
-                        child: const Text(
-                          'Cancel',
-                          style: TextStyle(
-                              color: Colors.blueAccent,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Handle add button action
-                          Navigator.pop(context); // Close the bottom sheet
-                        },
+                        onPressed: () {},
                         child: const Text(
                           'Add',
                           style: TextStyle(
@@ -209,7 +290,7 @@ class _TodoPageState extends State<TodoPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -269,7 +350,7 @@ class _TodoPageState extends State<TodoPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   if (showTimePicker)
                     Expanded(
                       child: Container(
@@ -351,14 +432,5 @@ class _TodoPageState extends State<TodoPage> {
         );
       },
     );
-  }*/
-  void _showNewReminderModal(BuildContext context) {
-  ModalManager.showNewReminderModal(context);
+  }
 }
-
-void _showDetailModal(BuildContext context) {
-  ModalManager.showDetailModal(context);
-}
-
-}
-
