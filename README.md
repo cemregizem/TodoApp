@@ -7,11 +7,17 @@ logout,
 new reminderla birlikte title,note ekleme
 ,to-doların listelenmesi,
 yapılan todonun işaretlenmesi,
-todoların silinmesi özellikleri çalışıyor.
-<img width="476" alt="Screenshot 2024-06-03 at 05 49 35" src="https://github.com/cemregizem/Plantist/assets/42242525/f0c34898-411a-44f6-af58-70a33efdfe04"><img width="476" alt="Screenshot 2024-06-03 at 05 50 05" src="https://github.com/cemregizem/Plantist/assets/42242525/15a43e88-891e-4da2-a1af-bb28e6855cdd">
-<img width="347" alt="Screenshot 2024-06-03 at 05 43 15" src="https://github.com/cemregizem/Plantist/assets/42242525/f46f2d8c-6aa1-4cdb-8a2e-6d4d5ebb694a">
-<img width="476" alt="Screenshot 2024-06-03 at 05 48 25" src="https://github.com/cemregizem/Plantist/assets/42242525/b40b270e-1b54-4135-bafb-ca1fecd4b29b">
-<img width="476" alt="Screenshot 2024-06-03 at 05 48 56" src="https://github.com/cemregizem/Plantist/assets/42242525/a193246b-e531-4ef5-81ae-32c129b09269">
-<img width="476" alt="Screenshot 2024-06-03 at 05 49 08" src="https://github.com/cemregizem/Plantist/assets/42242525/9780cbe0-6cad-47e4-a402-76490b139a71">
-<img width="476" alt="Screenshot 2024-06-03 at 05 49 17" src="https://github.com/cemregizem/Plantist/assets/42242525/43385f67-13a8-46fe-8790-355dbcc02393">
-<img width="476" alt="Screenshot 2024-06-03 at 05 50 23" src="https://github.com/cemregizem/Plantist/assets/42242525/ae07cc65-576e-4b3c-8f8c-a83e151035e9">
+todoların silinmesi,
+todo listesinde başlığa göre arama yapılması özellikleri çalışıyor.
+<img width="476" alt="Screenshot 2024-06-03 at 07 30 40" src="https://github.com/cemregizem/Plantist/assets/42242525/82595b90-2d61-474a-85cb-5d02469196d8">
+
+
+<img width="476" alt="Screenshot 2024-06-03 at 07 29 16" src="https://github.com/cemregizem/Plantist/assets/42242525/e80bcbb8-5dc8-4334-bd2c-044eabd09cde">
+<img width="476" alt="Screenshot 2024-06-03 at 07 29 33" src="https://github.com/cemregizem/Plantist/assets/42242525/296017b2-5e9f-44e4-bfcc-265aee9e1fb6">
+<img width="476" alt="Screenshot 2024-06-03 at 07 29 47" src="https://github.com/cemregizem/Plantist/assets/42242525/41295cf1-fcd1-4cca-89b3-83875beb6ec0">
+<img width="476" alt="Screenshot 2024-06-03 at 07 29 57" src="https://github.com/cemregizem/Plantist/assets/42242525/672bb6ea-2c40-4e10-a4b1-589c533e4093">
+<img width="476" alt="Screenshot 2024-06-03 at 07 30 06" src="https://github.com/cemregizem/Plantist/assets/42242525/868d2aa2-d820-48fe-a0b9-1d31a88b5eed">
+<img width="476" alt="Screenshot 2024-06-03 at 07 30 28" src="https://github.com/cemregizem/Plantist/assets/42242525/20439a6f-a5a3-4970-884d-f9fe984e429c">
+<img width="476" alt="Screenshot 2024-06-03 at 07 30 50" src="https://github.com/cemregizem/Plantist/assets/42242525/be0d55d8-5c0f-427f-ade1-44364d8bbf6c">
+<img width="476" alt="Screenshot 2024-06-03 at 07 31 03" src="https://github.com/cemregizem/Plantist/assets/42242525/793fd2f2-4cf2-4025-b547-b451bbba3107">
+
