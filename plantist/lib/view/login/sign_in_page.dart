@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:plantist/controller/auth/auth_controller.dart';
 
-class signInPage extends StatelessWidget {
+class SignInPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  signInPage({super.key});
+  SignInPage({super.key});
 
   @override
   Widget build(BuildContext context) {

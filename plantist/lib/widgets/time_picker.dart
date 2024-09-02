@@ -28,7 +28,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
         width: 200,
         height: 200,
         child: CupertinoTheme(
-          data: CupertinoThemeData(
+          data: const CupertinoThemeData(
             textTheme: CupertinoTextThemeData(
               dateTimePickerTextStyle: TextStyle(fontSize: 20),
             ),
@@ -39,6 +39,9 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
             onDateTimeChanged: (DateTime dateTime) {
               setState(() {
                 _selectedTime = TimeOfDay.fromDateTime(dateTime);
+                print('---------');
+                print(_selectedTime);
+                print('-------');
               });
               widget.onTimeChanged(_selectedTime);
             },

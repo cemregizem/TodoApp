@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:plantist/view/login/signInPage.dart';
-import 'package:plantist/view/register/signUpPage.dart';
+import 'package:plantist/view/login/sign_in_page.dart';
+import 'package:plantist/view/register/sign_up_page.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 30),
             ElevatedButton.icon(
               onPressed: () {
-                Get.to(signInPage());
+                Get.to(SignInPage());
               },
               icon: const Icon(
                 Icons.email,
