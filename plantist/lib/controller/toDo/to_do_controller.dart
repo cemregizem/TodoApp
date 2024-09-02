@@ -2,12 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:plantist/model/toDo_model.dart';
+import 'package:plantist/model/to_do_model.dart';
 
 class TodoController extends GetxController {
-  var todoList = <toDoModel>[].obs;
-  var filteredTodos = <toDoModel>[].obs;
-
+  var todoList = <ToDoModel>[].obs;
+  var filteredTodos = <ToDoModel>[].obs;
+  var selectedPriority = 'Medium'.obs; 
+ 
+ void updatePriority(String newPriority) {
+    selectedPriority.value = newPriority;
+  }
   @override
   void onInit() {
     super.onInit();
@@ -31,7 +35,7 @@ class TodoController extends GetxController {
 
       if (todos != null) {
         todos.forEach((key, value) {
-          toDoModel todo = toDoModel.fromMap(value);
+          ToDoModel todo = ToDoModel.fromMap(value);
           todoList.add(todo);
         });
       }
@@ -41,6 +45,7 @@ class TodoController extends GetxController {
   }
 
   Future<void> addTodo(String title, String note) async {
+     String priority = selectedPriority.value; // Use the selectedPriority from the controller
     if (title.isNotEmpty && note.isNotEmpty) {
       String uid = FirebaseAuth.instance.currentUser!.uid;
       DatabaseReference todoRef =
@@ -50,6 +55,8 @@ class TodoController extends GetxController {
         'title': title,
         'todoId': todoId,
         'note': note,
+        'priority': priority,
+       // 'reminderDate': reminderDate,
       });
     } else {
       ScaffoldMessenger.of(Get.context!).showSnackBar(
