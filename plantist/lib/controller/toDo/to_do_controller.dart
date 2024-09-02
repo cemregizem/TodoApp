@@ -7,11 +7,16 @@ import 'package:plantist/model/to_do_model.dart';
 class TodoController extends GetxController {
   var todoList = <ToDoModel>[].obs;
   var filteredTodos = <ToDoModel>[].obs;
-  var selectedPriority = 'Medium'.obs; 
- 
- void updatePriority(String newPriority) {
+  var selectedPriority = 'Medium'.obs;
+  var selectedTitle = ''.obs;
+  var selectedNote = ''.obs;
+  var selectedDate = DateTime.now().obs;
+  var selectedTime = TimeOfDay.now().obs;
+
+  void updatePriority(String newPriority) {
     selectedPriority.value = newPriority;
   }
+
   @override
   void onInit() {
     super.onInit();
@@ -45,7 +50,8 @@ class TodoController extends GetxController {
   }
 
   Future<void> addTodo(String title, String note) async {
-     String priority = selectedPriority.value; // Use the selectedPriority from the controller
+    String priority =
+        selectedPriority.value; // Use the selectedPriority from the controller
     if (title.isNotEmpty && note.isNotEmpty) {
       String uid = FirebaseAuth.instance.currentUser!.uid;
       DatabaseReference todoRef =
@@ -56,7 +62,7 @@ class TodoController extends GetxController {
         'todoId': todoId,
         'note': note,
         'priority': priority,
-       // 'reminderDate': reminderDate,
+        // 'reminderDate': reminderDate,
       });
     } else {
       ScaffoldMessenger.of(Get.context!).showSnackBar(
@@ -98,5 +104,45 @@ class TodoController extends GetxController {
     await todoRef.update({
       'isDone': isDone,
     });
+  }
+
+  void updateTodo(ToDoModel todo) async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    DatabaseReference todoRef = FirebaseDatabase.instance
+        .reference()
+        .child('todos')
+        .child(uid)
+        .child(todo.todoId);
+
+    // Format date and time as strings
+    String formattedDate =
+        selectedDate.value.toIso8601String().split('T')[0]; // Format the date to ISO 8601
+    String formattedTime =
+        '${selectedTime.value.hour.toString().padLeft(2, '0')}:${selectedTime.value.minute.toString().padLeft(2, '0')}'; // Format the time as HH:mm
+
+    await todoRef.update({
+      'title': selectedTitle.value,
+      'note': selectedNote.value,
+      'priority': selectedPriority.value,
+      'reminderDate': formattedDate,
+      'reminderTime': formattedTime,
+    });
+  }
+
+  // New methods to update fields
+  void setTitle(String title) {
+    selectedTitle.value = title;
+  }
+
+  void setNote(String note) {
+    selectedNote.value = note;
+  }
+
+  void setDate(DateTime date) {
+    selectedDate.value = date;
+  }
+
+  void setTime(TimeOfDay time) {
+    selectedTime.value = time;
   }
 }

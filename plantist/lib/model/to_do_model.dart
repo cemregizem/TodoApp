@@ -3,9 +3,10 @@ class ToDoModel {
   late String title;
   late String note;
   late bool isDone = false;
-  late String? reminderDate;
+  late String? reminderDate; 
+  late String? reminderTime; 
   late String priority;
-  //late TimeOfDay? reminderTime;
+  
  
 
   ToDoModel(
@@ -14,8 +15,9 @@ class ToDoModel {
       required this.note,
       required this.isDone,
       this.reminderDate,
+      this.reminderTime,
       required this.priority,
-     // this.reminderTime,
+     
       
       });
 
@@ -26,7 +28,8 @@ class ToDoModel {
     isDone = map['isDone'] ?? false;
     reminderDate = map['reminderDate'];
     priority = map['priority'];
-    //reminderTime = map['reminderTime'] != null ? _parseTimeOfDay(map['reminderTime']) : null;
+    reminderDate = map['reminderDate']; // Date stored as a string
+    reminderTime = map['reminderTime']; 
    
-  }
+  } 
 }

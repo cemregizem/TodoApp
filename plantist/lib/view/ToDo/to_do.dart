@@ -16,7 +16,6 @@ class TodoPage extends StatelessWidget {
 
   final String email;
   final String userId;
- 
 
   TextEditingController noteController = TextEditingController();
   TextEditingController titleController = TextEditingController();
@@ -81,21 +80,45 @@ class TodoPage extends StatelessWidget {
                                   todo.todoId, value ?? false);
                             },
                           ),
-                          title: Text(
-                            todo.title,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                          title: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              children: [
+                                Text(
+                                  todo.title,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                 Text(
+                                 todo.note,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ],
                             ),
                           ),
-                          subtitle: Text(
-                            todo.note,
-                            style: const TextStyle(fontSize: 16),
+                          subtitle: Align(
+                            alignment: Alignment.centerLeft,
+                            child: 
+                                Row(
+                                  children: [
+                                    Text(
+                                      todo.reminderDate ?? '',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      todo.reminderTime ?? '',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                )
+                             
                           ),
-                          trailing:PriorityDot(priority: todo.priority),
+                          trailing: PriorityDot(priority: todo.priority),
                           onTap: () {
-                            // Implement update logic here
-                            // _showUpdateReminderModal(context, todo);
+                            _showDetailModal(context, todo);
                           },
                         ),
                       ),
@@ -149,8 +172,7 @@ class TodoPage extends StatelessWidget {
                     onPressed: () async {
                       String title = titleController.text.trim();
                       String note = noteController.text.trim();
-                      await todoController.addTodo(
-                          title, note);
+                      await todoController.addTodo(title, note);
                       titleController.clear();
                       noteController.clear();
                       Navigator.pop(context);
@@ -183,19 +205,21 @@ class TodoPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Priority'),
-                  Expanded(
-                    child:Obx((){ return DropDownWidget(
-                       options: ['High', 'Medium', 'Low'],
+                  const Text('Priority',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 100),
+                  Expanded(child: Obx(() {
+                    return DropDownWidget(
+                      options: ['High', 'Medium', 'Low'],
                       selectedValue: todoController.selectedPriority.value,
                       onChanged: (newValue) {
                         todoController.updatePriority(newValue);
                       },
-                    );})
-                  ),
+                    );
+                  })),
                 ],
               )
-              
             ],
           ),
         );
@@ -203,8 +227,10 @@ class TodoPage extends StatelessWidget {
     );
   }
 
-
-  void _showDetailModal(BuildContext context) {
+  void _showDetailModal(BuildContext context, ToDoModel todo) {
+    todoController.setTitle(todo.title);
+    todoController.setNote(todo.note);
+    todoController.selectedPriority.value = todo.priority;
     // Convert variables to Rx types
     final showDatePicker = false.obs;
     final showTimePicker = false.obs;
@@ -232,7 +258,7 @@ class TodoPage extends StatelessWidget {
                         Navigator.pop(context); // Close the bottom sheet
                       },
                       child: const Text(
-                        'Back',
+                        'Cancel',
                         style: TextStyle(
                             color: Colors.blueAccent,
                             fontWeight: FontWeight.bold,
@@ -240,9 +266,12 @@ class TodoPage extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        todoController.updateTodo(todo);
+                        Navigator.pop(context);
+                      },
                       child: const Text(
-                        'Add',
+                        'Done',
                         style: TextStyle(
                             color: Colors.blueAccent,
                             fontWeight: FontWeight.bold,
@@ -252,9 +281,84 @@ class TodoPage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                DatePickerWidget(
-                    showDatePicker: showDatePicker, selectedDate: selectedDate),
+                Obx(() => TextField(
+                      controller: TextEditingController(
+                          text: todoController.selectedTitle.value),
+                      onChanged: (value) {
+                        todoController.setTitle(value);
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Title',
+                      ),
+                    )),
+                const SizedBox(height: 20),
+                Obx(() => TextField(
+                      controller: TextEditingController(
+                          text: todoController.selectedNote.value),
+                      onChanged: (value) {
+                        todoController.setNote(value);
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Note',
+                      ),
+                    )),
+                const SizedBox(height: 60),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Priority',
+                        style: TextStyle(
+                              color: Colors.blueGrey,
+                       
+                              fontSize: 18)),
+                    const SizedBox(width: 100),
+                    Expanded(child: Obx(() {
+                      return DropDownWidget(
+                        options: const ['High', 'Medium', 'Low'],
+                        selectedValue: todoController.selectedPriority.value,
+                        onChanged: (newValue) {
+                          todoController.updatePriority(newValue);
+                        },
+                      );
+                    })),
+                  ],
+                ),
+                 const SizedBox(height: 16),
+                Obx(() => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Date',
+                          style: TextStyle(
+                            color: showDatePicker.value
+                                ? Colors.green
+                                : Colors.blueGrey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
+                        Switch(
+                          value: showDatePicker.value,
+                          onChanged: (bool value) {
+                            showDatePicker.value = value;
+                            if (value) {
+                              showTimePicker.value = false;
+                            }
+                          },
+                        ),
+                      ],
+                    )),
                 const SizedBox(height: 16),
+                Obx(() {
+                  if (showDatePicker.value) {
+                    return DatePickerWidget(
+                      showDatePicker: showDatePicker,
+                      selectedDate: selectedDate,
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                }),
                 Obx(() => Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -274,7 +378,7 @@ class TodoPage extends StatelessWidget {
                             if (value) {
                               showDatePicker.value = false;
                             }
-                            print(showDatePicker); // Disable date picker
+                 // Disable date picker
                           },
                         ),
                       ],
@@ -285,76 +389,12 @@ class TodoPage extends StatelessWidget {
                     return TimePickerWidget(
                       onTimeChanged: (time) {
                         selectedTime.value = time;
-                        print('**********');
-                        print(selectedTime.value);
                       },
                     );
                   } else {
                     return SizedBox.shrink();
                   }
                 }),
-                const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: double.infinity, // Take full width
-                    height: 80, // Set the height
-                    decoration: BoxDecoration(
-                      color: Colors.white54,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.grey, // Set the border color
-                        width: 1, // Set the border width
-                      ), // Set the radius
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Priority',
-                          style: TextStyle(fontSize: 24, color: Colors.black),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.grey,
-                          size: 24,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: double.infinity, // Take full width
-                    height: 80, // Set the height
-                    decoration: BoxDecoration(
-                      color: Colors.white54,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.grey, // Set the border color
-                        width: 1, // Set the border width
-                      ), // Set the radius
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Attach a File',
-                          style: TextStyle(fontSize: 24, color: Colors.black),
-                        ),
-                        Icon(
-                          Icons.attach_file,
-                          color: Colors.grey,
-                          size: 24,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
               ],
             ),
           );
