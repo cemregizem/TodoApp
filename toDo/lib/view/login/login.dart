@@ -25,7 +25,7 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             const Text(
-              'Plantist',
+              'toDo',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
