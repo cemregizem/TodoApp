@@ -1,0 +1,6 @@
+<resources>
+    <!-- Replace with your Firebase project details -->
+    <string name="default_web_client_id" translatable="false">YOUR_WEB_CLIENT_ID</string>
+    <string name="firebase_database_url" translatable="false">YOUR_DATABASE_URL</string>
+    <!-- Add other Firebase options as needed -->
+</resources>
