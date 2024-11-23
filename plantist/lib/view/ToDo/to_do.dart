@@ -108,10 +108,7 @@ class TodoPage extends StatelessWidget {
                                       style: const TextStyle(fontSize: 16),
                                     ),
                                     SizedBox(width: 10),
-                                    Text(
-                                      todo.reminderTime ?? '',
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
+                                   
                                   ],
                                 )
                              
@@ -360,42 +357,9 @@ class TodoPage extends StatelessWidget {
                       return SizedBox.shrink();
                     }
                   }),
-                  Obx(() => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Time',
-                            style: TextStyle(
-                                color: showTimePicker.value
-                                    ? Colors.green
-                                    : Colors.blueGrey,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24),
-                          ),
-                          Switch(
-                            value: showTimePicker.value,
-                            onChanged: (bool value) {
-                              showTimePicker.value = value;
-                              if (value) {
-                                showDatePicker.value = false;
-                              }
-                   // Disable date picker
-                            },
-                          ),
-                        ],
-                      )),
-                  const SizedBox(height: 16),
-                  Obx(() {
-                    if (showTimePicker.value) {
-                      return TimePickerWidget(
-                        onTimeChanged: (time) {
-                          selectedTime.value = time;
-                        },
-                      );
-                    } else {
-                      return SizedBox.shrink();
-                    }
-                  }),
+                  
+                
+                
                 ],
               ),
             ),
