@@ -241,161 +241,163 @@ class TodoPage extends StatelessWidget {
         isScrollControlled: true,
         context: context,
         builder: (BuildContext context) {
-          return Container(
-            padding: const EdgeInsets.all(16),
-            height: 900, // Increased height to accommodate both pickers
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        // Handle cancel button action
-                        Navigator.pop(context); // Close the bottom sheet
-                      },
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                            color: Colors.blueAccent,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        todoController.updateTodo(todo);
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        'Done',
-                        style: TextStyle(
-                            color: Colors.blueAccent,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Obx(() => TextField(
-                      controller: TextEditingController(
-                          text: todoController.selectedTitle.value),
-                      onChanged: (value) {
-                        todoController.setTitle(value);
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Title',
-                      ),
-                    )),
-                const SizedBox(height: 20),
-                Obx(() => TextField(
-                      controller: TextEditingController(
-                          text: todoController.selectedNote.value),
-                      onChanged: (value) {
-                        todoController.setNote(value);
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Note',
-                      ),
-                    )),
-                const SizedBox(height: 60),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Priority',
-                        style: TextStyle(
-                              color: Colors.blueGrey,
-                       
-                              fontSize: 18)),
-                    const SizedBox(width: 100),
-                    Expanded(child: Obx(() {
-                      return DropDownWidget(
-                        options: const ['High', 'Medium', 'Low'],
-                        selectedValue: todoController.selectedPriority.value,
-                        onChanged: (newValue) {
-                          todoController.updatePriority(newValue);
+          return SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              height: 900, 
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          // Handle cancel button action
+                          Navigator.pop(context); // Close the bottom sheet
                         },
-                      );
-                    })),
-                  ],
-                ),
-                 const SizedBox(height: 16),
-                Obx(() => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Date',
+                        child: const Text(
+                          'Cancel',
                           style: TextStyle(
-                            color: showDatePicker.value
-                                ? Colors.green
-                                : Colors.blueGrey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                          ),
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
                         ),
-                        Switch(
-                          value: showDatePicker.value,
-                          onChanged: (bool value) {
-                            showDatePicker.value = value;
-                            if (value) {
-                              showTimePicker.value = false;
-                            }
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          todoController.updateTodo(todo);
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          'Done',
+                          style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Obx(() => TextField(
+                        controller: TextEditingController(
+                            text: todoController.selectedTitle.value),
+                        onChanged: (value) {
+                          todoController.setTitle(value);
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Title',
+                        ),
+                      )),
+                  const SizedBox(height: 20),
+                  Obx(() => TextField(
+                        controller: TextEditingController(
+                            text: todoController.selectedNote.value),
+                        onChanged: (value) {
+                          todoController.setNote(value);
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Note',
+                        ),
+                      )),
+                  const SizedBox(height: 60),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Priority',
+                          style: TextStyle(
+                                color: Colors.blueGrey,
+                         
+                                fontSize: 18)),
+                      const SizedBox(width: 100),
+                      Expanded(child: Obx(() {
+                        return DropDownWidget(
+                          options: const ['High', 'Medium', 'Low'],
+                          selectedValue: todoController.selectedPriority.value,
+                          onChanged: (newValue) {
+                            todoController.updatePriority(newValue);
                           },
-                        ),
-                      ],
-                    )),
-                const SizedBox(height: 16),
-                Obx(() {
-                  if (showDatePicker.value) {
-                    return DatePickerWidget(
-                      showDatePicker: showDatePicker,
-                      selectedDate: selectedDate,
-                    );
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                }),
-                Obx(() => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Time',
-                          style: TextStyle(
-                              color: showTimePicker.value
+                        );
+                      })),
+                    ],
+                  ),
+                   const SizedBox(height: 16),
+                  Obx(() => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Date',
+                            style: TextStyle(
+                              color: showDatePicker.value
                                   ? Colors.green
                                   : Colors.blueGrey,
                               fontWeight: FontWeight.bold,
-                              fontSize: 24),
-                        ),
-                        Switch(
-                          value: showTimePicker.value,
-                          onChanged: (bool value) {
-                            showTimePicker.value = value;
-                            if (value) {
-                              showDatePicker.value = false;
-                            }
-                 // Disable date picker
-                          },
-                        ),
-                      ],
-                    )),
-                const SizedBox(height: 16),
-                Obx(() {
-                  if (showTimePicker.value) {
-                    return TimePickerWidget(
-                      onTimeChanged: (time) {
-                        selectedTime.value = time;
-                      },
-                    );
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                }),
-              ],
+                              fontSize: 24,
+                            ),
+                          ),
+                          Switch(
+                            value: showDatePicker.value,
+                            onChanged: (bool value) {
+                              showDatePicker.value = value;
+                              if (value) {
+                                showTimePicker.value = false;
+                              }
+                            },
+                          ),
+                        ],
+                      )),
+                  const SizedBox(height: 16),
+                  Obx(() {
+                    if (showDatePicker.value) {
+                      return DatePickerWidget(
+                        showDatePicker: showDatePicker,
+                        selectedDate: selectedDate,
+                      );
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  }),
+                  Obx(() => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Time',
+                            style: TextStyle(
+                                color: showTimePicker.value
+                                    ? Colors.green
+                                    : Colors.blueGrey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24),
+                          ),
+                          Switch(
+                            value: showTimePicker.value,
+                            onChanged: (bool value) {
+                              showTimePicker.value = value;
+                              if (value) {
+                                showDatePicker.value = false;
+                              }
+                   // Disable date picker
+                            },
+                          ),
+                        ],
+                      )),
+                  const SizedBox(height: 16),
+                  Obx(() {
+                    if (showTimePicker.value) {
+                      return TimePickerWidget(
+                        onTimeChanged: (time) {
+                          selectedTime.value = time;
+                        },
+                      );
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  }),
+                ],
+              ),
             ),
           );
         });
