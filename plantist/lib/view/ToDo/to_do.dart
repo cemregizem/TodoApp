@@ -5,7 +5,6 @@ import 'package:plantist/model/to_do_model.dart';
 import 'package:plantist/widgets/date_picker.dart';
 import 'package:plantist/widgets/drop_down.dart';
 import 'package:plantist/widgets/priority.dart';
-import 'package:plantist/widgets/time_picker.dart';
 import 'package:plantist/widgets/header.dart';
 import 'package:plantist/widgets/button.dart';
 import 'package:plantist/widgets/search_bar.dart'
@@ -80,38 +79,26 @@ class TodoPage extends StatelessWidget {
                                   todo.todoId, value ?? false);
                             },
                           ),
-                          title: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Column(
-                              children: [
-                                Text(
-                                  todo.title,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                  ),
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                todo.title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
                                 ),
-                                 Text(
-                                 todo.note,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
+                              ),
+                              Text(
+                                todo.note,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ],
                           ),
-                          subtitle: Align(
-                            alignment: Alignment.centerLeft,
-                            child: 
-                                Row(
-                                  children: [
-                                    Text(
-                                      todo.reminderDate ?? '',
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                    SizedBox(width: 10),
-                                   
-                                  ],
-                                )
-                             
+                          subtitle: Text(
+                            textAlign: TextAlign.left,
+                            todo.reminderDate ?? '',
+                            style: const TextStyle(fontSize: 16),
                           ),
                           trailing: PriorityDot(priority: todo.priority),
                           onTap: () {
@@ -154,8 +141,7 @@ class TodoPage extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () {
-                      // Handle cancel button action
-                      Navigator.pop(context); // Close the bottom sheet
+                      Navigator.pop(context);
                     },
                     child: const Text(
                       'Cancel',
@@ -208,7 +194,7 @@ class TodoPage extends StatelessWidget {
                   const SizedBox(width: 100),
                   Expanded(child: Obx(() {
                     return DropDownWidget(
-                      options: ['High', 'Medium', 'Low'],
+                      options: const ['High', 'Medium', 'Low'],
                       selectedValue: todoController.selectedPriority.value,
                       onChanged: (newValue) {
                         todoController.updatePriority(newValue);
@@ -232,7 +218,6 @@ class TodoPage extends StatelessWidget {
     final showDatePicker = false.obs;
     final showTimePicker = false.obs;
     final selectedDate = DateTime.now().obs;
-    final selectedTime = TimeOfDay.now().obs;
 
     showModalBottomSheet(
         isScrollControlled: true,
@@ -241,7 +226,7 @@ class TodoPage extends StatelessWidget {
           return SingleChildScrollView(
             child: Container(
               padding: const EdgeInsets.all(16),
-              height: 900, 
+              height: 900,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -305,10 +290,8 @@ class TodoPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Priority',
-                          style: TextStyle(
-                                color: Colors.blueGrey,
-                         
-                                fontSize: 18)),
+                          style:
+                              TextStyle(color: Colors.blueGrey, fontSize: 18)),
                       const SizedBox(width: 100),
                       Expanded(child: Obx(() {
                         return DropDownWidget(
@@ -321,7 +304,7 @@ class TodoPage extends StatelessWidget {
                       })),
                     ],
                   ),
-                   const SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Obx(() => Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -357,9 +340,6 @@ class TodoPage extends StatelessWidget {
                       return SizedBox.shrink();
                     }
                   }),
-                  
-                
-                
                 ],
               ),
             ),

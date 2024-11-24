@@ -9,6 +9,7 @@ class AuthController extends GetxController {
   static AuthController instance = Get.find();
 
   late Rx<User?> _user;
+  bool _navigated = false;
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -28,17 +29,22 @@ class AuthController extends GetxController {
         _initialScreen); //listener(_user) and (_initialScreen)callback function listening any changes all the time
   }
 
-  _initialScreen(User? user) { //? is for if user is null
+  _initialScreen(User? user) {
+    if (_navigated) return; 
+    //? is for if user is null
     if (user == null) {
+      _navigated = true;
       //user didnt login
-      print('login page');
+     
       Get.offAll(() => const LoginPage());
     } else {
+       _navigated = true;
       Get.offAll(() => TodoPage(
             email: user.email!,
             userId: user.uid,
           ));
     }
+     Future.delayed(const Duration(seconds: 1), () => _navigated = false);
   }
 
   void register(String email, password) async {
